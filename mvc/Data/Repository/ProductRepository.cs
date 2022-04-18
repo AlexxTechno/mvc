@@ -24,6 +24,6 @@ namespace mvc.Data.Repository
 
         public IEnumerable<Product> IsNewProduct => applicationDb.Product.Where(prod => prod.IsNew).Include(prod => prod.Category).Include(img => img.Image).Include(prod => prod.Video).Where(prod => prod.IsNew == true);
 
-        public Product getObjectProduct(int productId) => applicationDb.Product.Include(img => img.Image).Include(prod => prod.Category).Include(prod => prod.Video).First(prod => prod.Id == productId);
+        public Product GetObjectProduct(int productId) => applicationDb.Product.Include(img => img.Image).Include(prod => prod.Category).Include(prod => prod.Video).First(prod => prod.Id == productId);
     }
 }

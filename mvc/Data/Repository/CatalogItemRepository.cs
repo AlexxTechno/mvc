@@ -17,8 +17,8 @@ namespace mvc.Data.Repository
             this.applicationDb = applicationDb;
         }
 
-        public IEnumerable<CatalogItem> AllCatalogItems => (IEnumerable<CatalogItem>)applicationDb.Category.Where(cat => cat.IsPublished == true).OrderBy(cat => cat.Number)
-                                                                                       .Join(applicationDb.Product.Where(prod => prod.IsPublished == true).OrderBy(prod => prod.Number),
+        public IEnumerable<CatalogItem> AllCatalogItems => ((IEnumerable<CatalogItem>)applicationDb.Category.Where(cat => cat.IsPublished == true)
+                                                                                       .Join(applicationDb.Product.Where(prod => prod.IsPublished == true),
                                                                                        cat => cat.Id,
                                                                                        prod => prod.CategoryId,
                                                                                        (category, product) => new
@@ -34,7 +34,9 @@ namespace mvc.Data.Repository
                                                                                            ProductDimension = product.Dimension,
                                                                                            ProductPrice = product.Price,
                                                                                            ProductPriceBig = product.PriceBig,
-                                                                                       }).Join(applicationDb.Image.Where(img => img.ImageTypeId == 1),
+                                                                                       })
+                                                                                        .Join(applicationDb.Image
+                                                                                           .Where(img => img.ImageTypeId == 1),
                                                                                            catalog => catalog.ProductId,
                                                                                            img => img.ProductId,
                                                                                            (catalog, image) => new 
@@ -42,12 +44,15 @@ namespace mvc.Data.Repository
                                                                                            PrId = catalog.ProductId,
                                                                                            ImageId = image.Id,
                                                                                            ImageGuide = image.Guide,
-                                                                                       }).Join(applicationDb.Video,
+                                                                                       })
+                                                                                        .Join(applicationDb.Video,
                                                                                            catalog => catalog.PrId,
                                                                                            video => video.ProductId,
                                                                                            (catalog, video) => new
                                                                                        {
                                                                                            VideoGuide = video.Guide,
-                                                                                       });                     
+                                                                                       }))
+                                                                                        .OrderBy(item=>item.CategoryNumber)
+                                                                                        .ThenBy(item => item.ProductId);   //ProductNumber нужно вместо ProductId но его нет в модели CatalogItem                 
     }               
 }
