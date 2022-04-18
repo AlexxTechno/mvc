@@ -191,6 +191,7 @@
             //--- Redirect Category Delete Submit Button ---
             $(".deleteCat").on("click", function () {
                 url = "/dash/catdel/" + id;
+                console.log(id);
                 location.href = url;
             });
 

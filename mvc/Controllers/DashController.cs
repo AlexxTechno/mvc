@@ -29,14 +29,6 @@ namespace mvc.Controllers
             _allCategory = iAllCategory;
             _applicationDb = applicationDb;
         }
-        /*         
-        private readonly ILogger<DashController> _logger;
-
-        public DashController(ILogger<DashController> logger)
-        {
-            _logger = logger;
-        }
-        */
 
         ///*******************************************************************
         ///---------- Домашняя страница админки -----------
@@ -72,7 +64,7 @@ namespace mvc.Controllers
         /// </summary>
         /// <returns></returns>
         [Route("/dash/prodnew")]
-        public IActionResult ProdNew()
+        public async Task<IActionResult> ProdNew()
         {
             if (Request.Form["title"] != "")
             {
@@ -92,10 +84,19 @@ namespace mvc.Controllers
                 if (Request.Form["ispublished"] == "on") { prod.IsPublished = true; }
                 else { prod.IsPublished = false; }
                 prod.CategoryId = Convert.ToInt32(Request.Form["category"]);
-                _applicationDb.Product.Add(prod);
-                _applicationDb.SaveChanges();
 
-                int id = _applicationDb.Product.Max(prod => prod.Id);
+                try
+                {
+                    await _applicationDb.AddAsync(prod);
+                    await _applicationDb.SaveChangesAsync();
+                }
+                catch (DbUpdateException /* ex */)
+                {
+                    //Log the error (uncomment ex variable name and write a log.)
+                    ModelState.AddModelError("", "Не получилось внести изменения в модель Product.");
+                }
+
+                int id = await _applicationDb.Product.MaxAsync(prod => prod.Id);
 
                 //-- вносим изменения в картинки --
                 //- основная на главной                             
@@ -103,18 +104,15 @@ namespace mvc.Controllers
                 imghome.ProductId = id;
                 imghome.ImageTypeId = 1;
                 imghome.Guide = Request.Form["imghome"];
-                _applicationDb.Image.Add(imghome);
-                _applicationDb.SaveChanges();
-
-                //- новинка на главной nullable
-                if (Request.Form["imgnew"] != "")
+                try
                 {
-                    Image imgnew = new Image();
-                    imgnew.ProductId = id;
-                    imgnew.ImageTypeId = 2;
-                    imgnew.Guide = Request.Form["imgnew"];
-                    _applicationDb.Image.Add(imgnew);
-                    _applicationDb.SaveChanges();
+                    await _applicationDb.AddAsync(imghome);
+                    await _applicationDb.SaveChangesAsync();
+                }
+                catch (DbUpdateException /* ex */)
+                {
+                    //Log the error (uncomment ex variable name and write a log.)
+                    ModelState.AddModelError("", "Не получилось внести изменения в модель Image картинка на домашней.");
                 }
 
                 //- картинка на странице модели - под видео
@@ -122,8 +120,17 @@ namespace mvc.Controllers
                 imgone.ProductId = id;
                 imgone.ImageTypeId = 3;
                 imgone.Guide = Request.Form["imgone"];
-                _applicationDb.Image.Add(imgone);
-                _applicationDb.SaveChanges();
+
+                try
+                {
+                    await _applicationDb.AddAsync(imgone);
+                    await _applicationDb.SaveChangesAsync();
+                }
+                catch (DbUpdateException /* ex */)
+                {
+                    //Log the error (uncomment ex variable name and write a log.)
+                    ModelState.AddModelError("", "Не получилось внести изменения в модель Image картинка на странице товара под видео.");
+                }
 
                 //- новые картинки на странице одной модели - галерея nullable
                 if (Request.Form["imggal"] != "" && Request.Form["quansel"] != "0")
@@ -133,8 +140,17 @@ namespace mvc.Controllers
                     imggal.ImageTypeId = 4; ;
                     imggal.Guide = Request.Form["imggal"];
                     imggal.Quan = Convert.ToInt32(Request.Form["quansel"]);
-                    _applicationDb.Image.Add(imggal);
-                    _applicationDb.SaveChanges();
+
+                    try
+                    {
+                        await _applicationDb.AddAsync(imggal);
+                        await _applicationDb.SaveChangesAsync();
+                    }
+                    catch (DbUpdateException /* ex */)
+                    {
+                        //Log the error (uncomment ex variable name and write a log.)
+                        ModelState.AddModelError("", "Не получилось внести изменения в модель Image картинки на странице товара галерея.");
+                    }
                 }
 
                 //- новая запись в видео - nullable                 
@@ -143,8 +159,17 @@ namespace mvc.Controllers
                     Video video = new Video();
                     video.ProductId = id;
                     video.Guide = Request.Form["video"];
-                    _applicationDb.Video.Add(video);
-                    _applicationDb.SaveChanges();
+
+                    try
+                    {
+                        await _applicationDb.AddAsync(video);
+                        await _applicationDb.SaveChangesAsync();
+                    }
+                    catch (DbUpdateException /* ex */)
+                    {
+                        //Log the error (uncomment ex variable name and write a log.)
+                        ModelState.AddModelError("", "Не получилось внести изменения в модель Video.");
+                    }
                 }
             }
             return Redirect("~/Dash/Products");
@@ -255,19 +280,19 @@ namespace mvc.Controllers
                 if (Request.Form["imggal"] != "" && Request.Form["quansel"] != 0)
                 {
                     int imggalid = Convert.ToInt32(Request.Form["imggalid"]);
-                    Image my_imggalid = new Image(); // создаем новое
+                    Image my_imggal = new Image(); // создаем новое
                     if (imggalid != 0)
                     {
-                        my_imggalid.Id = imggalid; // изменяем существующее если есть
+                        my_imggal.Id = imggalid; // изменяем существующее если есть
                     }
 
-                    my_imggalid.Guide = Request.Form["imggal"];
-                    my_imggalid.ProductId = id;
-                    my_imggalid.ImageTypeId = 4;
-                    my_imggalid.Quan = Convert.ToInt32(Request.Form["quansel"]);
+                    my_imggal.Guide = Request.Form["imggal"];
+                    my_imggal.ProductId = id;
+                    my_imggal.ImageTypeId = 4;
+                    my_imggal.Quan = Convert.ToInt32(Request.Form["quansel"]);
                     try
                     {
-                        _applicationDb.Update(my_imggalid);
+                        _applicationDb.Update(my_imggal);
                         await _applicationDb.SaveChangesAsync();
                     }
                     catch (DbUpdateException /* ex */)
@@ -289,7 +314,7 @@ namespace mvc.Controllers
 
                             try
                             {
-                                _applicationDb.Remove(my_imggalid);
+                                _applicationDb.Image.Remove(my_imggalid);
                                 await _applicationDb.SaveChangesAsync();
                             }
                             catch (DbUpdateException /* ex */)
@@ -334,7 +359,7 @@ namespace mvc.Controllers
 
                     try
                     {
-                        _applicationDb.Remove(my_video);
+                        _applicationDb.Video.Remove(my_video);
                         await _applicationDb.SaveChangesAsync();
                     }
                     catch (DbUpdateException /* ex */)
@@ -360,7 +385,7 @@ namespace mvc.Controllers
                 Product product = new Product { Id = id };
                 try
                 {
-                    _applicationDb.Remove(product);
+                    _applicationDb.Product.Remove(product);
                     await _applicationDb.SaveChangesAsync();
                 }
                 catch (DbUpdateException /* ex */)
@@ -369,34 +394,72 @@ namespace mvc.Controllers
                     ModelState.AddModelError("", "Не получилось удалить изделие в модели Product.");
                 }
 
-                //-удаляем видео
-
-
-                //-удаляем все картинки
-            }
-            var prod = _applicationDb.Product.Find(id);
-            if (prod != null)
-            {
-                // удаление товара
-                _applicationDb.Remove(prod);
-                _applicationDb.SaveChanges();
-
-                // удаление видео - одна запись nullable
-                var video = _applicationDb.Video.Where(vid => vid.ProductId == id).FirstOrDefault();
+                //-удаляем видео, если есть
+                var video = await _applicationDb.Video.FirstOrDefaultAsync(v => v.ProductId == id);
                 if (video != null)
                 {
-                    _applicationDb.Remove(video);
-                    _applicationDb.SaveChanges();
+                    try
+                    {
+                        _applicationDb.Video.Remove(video);
+                        await _applicationDb.SaveChangesAsync();
+                    }
+                    catch (DbUpdateException /* ex */)
+                    {
+                        //Log the error (uncomment ex variable name and write a log.)
+                        ModelState.AddModelError("", "Не получилось удалить запись в модели Video.");
+                    }
                 }
 
-                // удаление картинок - несколько записей - удаляем по циклу
-                while (_applicationDb.Video.Where(vid => vid.ProductId == id).FirstOrDefault() != null)
+                //-удаляем все картинки
+                //-картинка галерея домашяя страница
+                var imghome = await _applicationDb.Image.Where(i => i.ImageTypeId == 1).FirstOrDefaultAsync(i => i.ProductId == id);
+                if (imghome != null)
                 {
-                    var img = _applicationDb.Video.Where(vid => vid.ProductId == id).FirstOrDefault();
-                    _applicationDb.Remove(img);
-                    _applicationDb.SaveChanges();
+                    try
+                    {
+                        _applicationDb.Image.Remove(imghome);
+                        await _applicationDb.SaveChangesAsync();
+                    }
+                    catch (DbUpdateException /* ex */)
+                    {
+                        //Log the error (uncomment ex variable name and write a log.)
+                        ModelState.AddModelError("", "Не получилось удалить картинку на домашней в модели Image.");
+                    }
+                }
+
+                //-картинка галерея домашяя страница
+                var imgone = await _applicationDb.Image.Where(i => i.ImageTypeId == 3).FirstOrDefaultAsync(i => i.ProductId == id);
+                if (imgone != null)
+                {
+                    try
+                    {
+                        _applicationDb.Image.Remove(imgone);
+                        await _applicationDb.SaveChangesAsync();
+                    }
+                    catch (DbUpdateException /* ex */)
+                    {
+                        //Log the error (uncomment ex variable name and write a log.)
+                        ModelState.AddModelError("", "Не получилось удалить картинку на странице изделия под видео в модели Image.");
+                    }
+                }
+
+                //-картинка галерея на странице товара
+                var imggal = await _applicationDb.Image.Where(i => i.ImageTypeId == 4).FirstOrDefaultAsync(i => i.ProductId == id);
+                if (imggal != null)
+                {
+                    try
+                    {
+                        _applicationDb.Image.Remove(imggal);
+                        await _applicationDb.SaveChangesAsync();
+                    }
+                    catch (DbUpdateException /* ex */)
+                    {
+                        //Log the error (uncomment ex variable name and write a log.)
+                        ModelState.AddModelError("", "Не получилось удалить картинку на странице изделия галерея в модели Image.");
+                    }
                 }
             }
+            
             return Redirect("~/Dash/Products");
         }
 
@@ -417,9 +480,9 @@ namespace mvc.Controllers
         /// </summary>
         /// <returns></returns>
         [Route("/dash/catnew")]
-        public IActionResult CatNew()
+        public async Task<IActionResult> CatNew()
         {
-            if (Request.Form.FirstOrDefault().Value != "")
+            if (Request.Form["title"] != "")
             {
                 Category cat = new Category();
                 cat.Title = Request.Form["title"];
@@ -428,8 +491,16 @@ namespace mvc.Controllers
                 cat.Number = Convert.ToInt32(Request.Form["number"]);
                 if (Request.Form["ispublished"] == "on") { cat.IsPublished = true; }
                 else { cat.IsPublished = false; }
-                _applicationDb.Category.Add(cat);
-                _applicationDb.SaveChanges();
+                try 
+                {
+                    await _applicationDb.Category.AddAsync(cat);
+                    await _applicationDb.SaveChangesAsync();
+                }
+                catch (DbUpdateException /* ex */)
+                {
+                    //Log the error (uncomment ex variable name and write a log.)
+                    ModelState.AddModelError("", "Не получилось создать новую запись в модели Category.");
+                }
             }
             return Redirect("~/Dash/Categories");
         }
@@ -438,19 +509,30 @@ namespace mvc.Controllers
         /// </summary>
         /// <returns></returns>
         [Route("/dash/catedit")]
-        public IActionResult CatEdit()
+        public async Task<IActionResult> CatEdit()
         {
             if (Request.Form.FirstOrDefault().Value != "")
             {
                 int id = Convert.ToInt32(Request.Form["id"]);
-                var cat = _applicationDb.Category.Find(id);
+
+                var cat = await _applicationDb.Category.FindAsync(id);
+
                 cat.Title = Request.Form["title"];
                 cat.Slug = Request.Form["slug"];
                 cat.Description = Request.Form["description"];
                 cat.Number = Convert.ToInt32(Request.Form["number"]);
                 if (Request.Form["ispublished"] == "on") { cat.IsPublished = true; }
                 else { cat.IsPublished = false; }
-                _applicationDb.SaveChanges();
+                try
+                {
+                    _applicationDb.Update(cat);
+                    await _applicationDb.SaveChangesAsync();
+                }
+                catch (DbUpdateException /* ex */)
+                {
+                    //Log the error (uncomment ex variable name and write a log.)
+                    ModelState.AddModelError("", "Не получилось отредактировать категорию из модели Category.");
+                }
             }
             return Redirect("~/Dash/Categories");
         }
@@ -459,14 +541,21 @@ namespace mvc.Controllers
         /// </summary>
         /// <returns></returns>
         [Route("/dash/catdel/{id}")]
-        public IActionResult CatDel(int id)
+        public async Task<IActionResult> CatDel(int id)
         {
-            var cat = _applicationDb.Category.Find(id);
-            if (cat != null)
+            var cat = await _applicationDb.Category.FindAsync(id);
+            System.Diagnostics.Debug.WriteLine("Id категории");
+            System.Diagnostics.Debug.WriteLine(id);
+            try
             {
-                _applicationDb.Remove(cat);
-                _applicationDb.SaveChanges();
+                _applicationDb.Category.Remove(cat);
+                await _applicationDb.SaveChangesAsync();
             }
+            catch (DbUpdateException)  //ex 
+            {
+                //Log the error (uncomment ex variable name and write a log.)
+                ModelState.AddModelError("", "Не получилось удалить категорию из модели Category.");
+            }     
             return Redirect("~/Dash/Categories");
         }
 
