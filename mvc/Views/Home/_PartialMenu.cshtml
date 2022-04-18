@@ -1,0 +1,8 @@
+﻿<ul>
+    @foreach (var cat in Model.Cat)
+    {
+         <li>
+              <a href="/products#@cat.Slug">@cat.Title</a>
+         </li>
+    }
+</ul>

@@ -1,0 +1,94 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <meta name="description" content="@ViewData["Description"]">
+
+    <link rel="apple-touch-icon" href="img/favicon.png">
+    <link rel="shortcut icon" type="image/x-icon" href="img/favicon.png">
+
+    <!-- <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+     <link rel="stylesheet" href="~/css/site.css" /> -->
+    <link rel="stylesheet" href="~/css/style.css">
+    <link rel="stylesheet" href="~/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/css/font-awesome.min.css">
+    <link rel="stylesheet" href="~/css/icofont.css">
+    <link rel="stylesheet" href="~/css/magnific-popup.css">
+    <link rel="stylesheet" href="~/css/meanmenu.min.css">
+    <link rel="stylesheet" href="~/css/plugins.css">
+    <link rel="stylesheet" href="~/css/shortcode/shortcodes.css">
+    <link rel="stylesheet" href="~/css/responsive.css">
+
+    <!-- Revolution Slider CSS -->
+    <link href="~/lib/revolution/css/settings.css" rel="stylesheet">
+    <link href="~/lib/revolution/css/navigation.css" rel="stylesheet">
+    <link href="~/lib/revolution/custom-setting.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Page Wraper Here Start -->
+    <div class="page-wraper" id="main-home">
+        <header>
+            <!-- Header Menu Area  -->
+            @await Html.PartialAsync("~/Views/Product/_PartialHeaderMenu.cshtml")
+
+            <!-- Header Breadcamb Area  -->
+            @await Html.PartialAsync("~/Views/Product/_PartialBreadcamb.cshtml")
+
+        </header>
+
+        <!-- Product Area -->
+        @RenderBody()
+
+
+        <!-- Footer Bottom Area -->
+        @await Html.PartialAsync("~/Views/Home/_PartialFooter.cshtml")
+
+    </div>
+    <!-- Page Wraper Here Start -->
+    <!-- all js here -->
+    <script src="~/js/vendor/jquery-1.12.4.min.js"></script>
+    <script src="~/js/popper.js"></script>
+    <script src="~/js/bootstrap.min.js"></script>
+    <script src="~/js/jquery.ajaxchimp.min.js"></script>
+    <script src="~/js/plugins.js"></script>
+    <script src="~/js/main.js"></script>
+
+    <!-- Revolution Slider JS -->
+    <script src="~/lib/revolution/js/jquery.themepunch.revolution.min.js"></script>
+    <script src="~/lib/revolution/js/jquery.themepunch.tools.min.js"></script>
+    <script src="~/lib/revolution/revolution-active.js"></script>
+
+    <!-- SLIDER REVOLUTION 5.0 EXTENSIONS  (Load Extensions only on Local File Systems !  The following part can be removed on Server for On Demand Loading) -->
+    <script src="~/lib/revolution/js/extensions/revolution.extension.kenburn.min.js"></script>
+    <script src="~/lib/revolution/js/extensions/revolution.extension.slideanims.min.js"></script>
+    <script src="~/lib/revolution/js/extensions/revolution.extension.actions.min.js"></script>
+    <script src="~/lib/revolution/js/extensions/revolution.extension.layeranimation.min.js"></script>
+    <script src="~/lib/revolution/js/extensions/revolution.extension.navigation.min.js"></script>
+    <script src="~/lib/revolution/js/extensions/revolution.extension.parallax.min.js"></script>
+
+    <!-- Yandex.Metrika counter -->
+    <script>
+        (function (m, e, t, r, i, k, a) {
+            m[i] = m[i] || function () { (m[i].a = m[i].a || []).push(arguments) };
+            m[i].l = 1 * new Date(); k = e.createElement(t), a = e.getElementsByTagName(t)[0], k.async = 1, k.src = r, a.parentNode.insertBefore(k, a)
+        })
+            (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+
+        ym(79797505, "init", {
+            clickmap: true,
+            trackLinks: true,
+            accurateTrackBounce: true,
+            webvisor: true,
+            ecommerce: "dataLayer"
+        });
+    </script>
+    <!-- /Yandex.Metrika counter
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>-->
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

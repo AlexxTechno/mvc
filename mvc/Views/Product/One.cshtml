@@ -1,0 +1,217 @@
+﻿@using mvc.Models
+@using mvc.Services
+@model OneProductCategory
+@{
+    var prod = Model.Prod;
+    ViewData["Title"] = prod.Title; //  + Model.Title
+    ViewData["Description"] = prod.Description;
+    ViewData["ModelTitle"] = prod.Title;
+    ViewData["ModelCategory"] = prod.Category.Title;
+    ViewData["BackUrl"] = "/products#" + prod.Category.Slug;
+    ViewData["ModelSku"] = prod.Sku;
+    ViewData["ext"] = ".png";
+    ViewData["sep"] = "-";
+
+    Layout = "_LayoutProduct";  // было  _Layout
+}
+<!-- mogel Area Start -->
+<section class="aboutus-area-actor gray-dark-bg ptb-90">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-5 col-md-12 col-sm-12">
+                <div class="about-actor-left">
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <h3>Модель: <span style="color: #e2a750">@prod.Sku @Trim.NameFilter(prod.Title)</span></h3>
+                            <h4>Размер: <span style="color: #e2a750">@prod.Dimension</span></h4>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            @{                               
+                                string pb = prod.PriceBig.ToString() == "0" ? "" : prod.PriceBig.ToString();
+                            }
+                            <h3><small>цена:</small> <span style="color: #e2a750"> @prod.Price </span> <span style="color: #d3180f"><del>@pb</del></span><i class="icofont icofont-rouble"></i></h3>
+                        </div>
+                    </div>
+
+                    <div class="text mt-20">
+                        <!-- serv-content жедтые маркеры - большие отступы -->
+                        <p>
+                            @prod.Description
+                        </p>
+                        <h5><bold>Краткое описание:</bold></h5>
+                        @{string[] summary = prod.Summary.Split('&');
+                        }
+                        <ul>
+                            @foreach (string sum in summary)
+                            {
+                                <li><i class="icofont icofont-tick-mark" style="color: #e2a750"></i>@sum</li>
+                                <br>
+                            }
+                        </ul>
+                    </div>
+                    <!-- <div class="text mt-20">
+                        <h5>Возможное исполнение</h5>
+                        <ul>
+                            <li><i class="icofont icofont-tick-mark" style="color: #e2a750"></i> кожа крейзи хорс темно-коричневая</li><br>
+                            <li><i class="icofont icofont-tickmark" style="color: #e2a750"></i> кожа крейзи хорс оливковая</li><br>
+                            <li><i class="icofont icofont-tick-mark" style="color: #e2a750"></i> кожа вощеный краст черная</li><br>
+                            <li><i class="icofont icofont-tick-mark" style="color: #e2a750"></i> кожа вощеный краст коричневая</li><br>
+                            <li><i class="icofont icofont-tick-mark" style="color: #e2a750"></i> комбинированное решение</li><br>
+                        </ul>
+                    </div> -->
+                    <div class="text mt-20">
+                        <h5><bold>Материалы:</bold></h5>
+                        @{string[] material = prod.Materials.Split('&');
+                        }
+                        <ul>
+                            @foreach (string mat in material)
+                            {
+                                <li><i class="icofont icofont-tick-mark" style="color: #e2a750"></i>@mat</li>
+                                <br>
+                            }
+                        </ul>
+
+                    </div>
+                    <div class="text mt-20">
+                        <h5><bold>Рекомендации по уходу:</bold></h5>
+                        <ul>
+                            <li><i class="icofont icofont-tick-mark" style="color: #e2a750"></i> беречь от огня</li>
+                            <br>
+                            <li><i class="icofont icofont-tick-mark" style="color: #e2a750"></i> беречь от попадания воды внуть изделия</li>
+                            <br>
+                        </ul>
+                    </div>
+                    <div class="button-rectangle pt-25">
+                        <a href="#order">ЗАКАЗАТЬ</a>
+                    </div>
+                </div>
+            </div>
+
+            <!---   latest-trailer-main - желтые полоски сверху снизу -->
+            <div class="col-lg-7 col-md-12 col-sm-12  trailer-right-area">
+                <div class='trailer-single'>
+                    <img src="@prod.Image.Where(img => img.ImageTypeId == 3).FirstOrDefault().Guide" alt="@prod.Title">
+
+                    @{
+                        if (prod.Video != null)
+                        {
+                             <a class='popup-youtube' href='\@prod.Video.Guide'>
+                                 <i class='icofont icofont-play-alt-2'></i>
+                             </a>       
+                        }
+                    }
+                </div>
+            </div>
+            <!---   latest-trailer-main - желтые полоски сверху снизу -->
+
+        </div>
+    </div>
+</section>
+<!--/mogel Area End -->
+<!-- Gallery Area Start -->
+<section class="gallery-area pt-95 pb-70">
+    <div class="container">
+        <div class="our-gallery">
+            <!-- Latest Shot/Portfolio Menu Tab
+
+    <div class="gallery">
+        <ul class="text-center gallery-menu">
+            <li class="active" data-filter="*">All</li>
+            <li class="filter" data-filter=".c1">SHOOTING</li>
+            <li class="filter" data-filter=".c2">PRODUCTION </li>
+            <li class="filter" data-filter=".c3">STUDIO</li>
+            <li class="filter" data-filter=".c4">LOCATION</li>
+        </ul>
+    </div> -->
+
+            @if (prod.Image.Where(img => img.ImageTypeId == 4).FirstOrDefault() != null)
+            {
+                string img = prod.Image.Where(img => img.ImageTypeId == 4).FirstOrDefault().Guide;
+                var quan = prod.Image.Where(img => img.ImageTypeId == 4).FirstOrDefault().Quan;
+
+                <!-- Latest Shot/Portfolio Menu Tab -->
+                <div class="grid gallery-box">
+                    <div class="gallery-content">
+
+                        @for (int i = 1; i <= Convert.ToInt32(quan); i++)
+                        {
+                            <!-- Image Single -->
+                            <div class="grid-item col-lg-4 col-md-6 col-sm-12 c2 c4">
+                                <div class="portfolio">
+                                    <div class="portfolio-image">
+                                        <img src="@img@prod.Sku@ViewData["sep"]@i@ViewData["ext"]" alt="@prod.Title" title="@prod.Title">
+                                    </div>
+                                    <div class="portfolio-content">
+                                        <a href="@img@prod.Sku@ViewData["sep"]@i@ViewData["ext"]" class="portfolio-zoom-button popup-gallery"><i class="icofont-search"></i></a>
+                                        <!--
+                                    <h5><a href="portfolio-details.html">KEEPER OVAL</a></h5>
+                                    <h6><a href="portfolio.html">коричневый</a></h6>
+                                -->
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Image Single -->
+                        }
+
+                    </div>
+                </div>
+            }
+
+        </div>
+        <!-- Latest Shot Main Area End -->
+    </div>
+</section>
+<!-- Gallery Area End -->
+<!-- блок с формой заказа -->
+<div id='order'>
+    <section class="ourteam-area pt-95 pb-100">
+        <div class="container">
+            <div class="row">
+                <!--  форма  -->
+                <div class="col-md-8">
+                    <div class="row align-items-center">
+                        <div class="blog-reply-wrapper mt-50">
+                            <h3><span style="color: #e2a750">ЗАПОЛНИТЕ ФОРМУ ДЛЯ ЗАКАЗА</span></h3>
+                            <form action="/mailer/order" method="post">
+                                <input type="hidden" name="id" value="@prod.Id" />
+                                <input type="hidden" name="sku" value="@prod.Sku" />
+                                <input type="hidden" name="title" value="@prod.Title" />
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="leave-form">
+                                            <input type="text" name="name" placeholder="Имя *" required />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="leave-form">
+                                            <input type="text" name="phone" placeholder="Телефон *" required />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="leave-form">
+                                            <input type="text" name="note" placeholder="Сообщение">
+                                        </div>
+                                        <div class="text-leave">
+                                            <input type="submit" value="ОТПРАВИТЬ">
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <!--  /форма  -->
+
+                <!--  картинка к форме  -->
+                <div class="col-md-4">
+                    <div>
+                        <img src="@prod.Image.Where(prod => prod.ImageTypeId==3).FirstOrDefault().Guide" width="300" alt="@prod.Title">
+                    </div>
+                </div>
+                <!--  /картинка к форме -->
+
+            </div>
+        </div>
+    </section>
+</div>
+<!-- /блок с формой  -->

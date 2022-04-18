@@ -1,0 +1,67 @@
+﻿@using mvc.Models
+@model ProductCategory
+@{ 
+
+    ViewData["Title"] = "Clean Leather Каталог изделий"; //  + Model.Title
+    ViewData["Description"] = "На данной странице представлены все товары из всех доступных категорий";
+    ViewData["ModelTitle"] = "Каталог изделий";
+    ViewData["ModelCategory"] = "home";
+    ViewData["BackUrl"] = "/";
+    ViewData["ModelSku"] = "все изделия";
+    Layout = "_LayoutProduct";  // было  _Layout
+    string url = "/img/home/gallery/";
+    string ext = ".png";
+}
+
+    <div class="page-content">
+        <!-- Gallery Area Start -->
+        <div class="gallery-area pt-95 pb-70">
+            <div class="container">
+                @foreach (var cat in Model.Cat)
+                {
+                    <!-- Category Titel -->
+                    <div id="@cat.Slug"></div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="section-titel text-right">
+                                <h2>@cat.Title</h2>
+                                <p>@cat.Description</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Category Titel -->
+
+                    <!-- Latest Shot Main Area Start -->
+                    <div class="our-gallery">
+                        <div class="grid gallery-box">
+                            <div class="gallery-content">
+
+                                @foreach (var prod in cat.Product.Where(product => product.CategoryId == cat.Id).Where(product => product.IsPublished == true))
+                                {
+                                    <!-- Single Product in Category -->
+                                        <div class="grid-item col-lg-4 col-md-6 col-sm-12 c1">
+                                            <div class="gallery-single style-two">
+                                                <div class="gallery-image">
+                                                    <img src="@url@prod.Sku@ext" alt="">
+                                                    <a href="@url@prod.Sku@ext" class="portfolio-zoom-button popup-gallery"><i class="icofont-search" title="Увеличить"></i></a>
+                                                </div>
+                                                <div class="gallery-meta text-center">
+                                                    <h5><a href="/product/show/@prod.Id" title="Подробнее">@prod.Title</a></h5>
+                                                    <h6>@prod.Category.Title</h6>    <!-- Категория товара-->
+                                                    <span>размер:</span><span style="color: #e2a750"> @prod.Dimension</span>
+                                                    <span>цена:</span><span style="color: #e2a750"> @prod.Price<i class="icofont icofont-rouble"></i></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <!-- Single Product in Category -->
+                                }
+
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+        <!-- Gallery Area End -->
+    </div>
+    <!-- Page Content End -->

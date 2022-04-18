@@ -1,0 +1,36 @@
+﻿@{
+    ViewData["Tille"] = "Clean Leather Изделия из кожи Подписка на рассылку";
+    ViewData["Description"] = "Clean Leather Изделия из кожи Страница подписки на новостную рассылку";
+    Layout = "_LayoutMailer";  // было  _Layout
+}
+
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <a href="/"><img src="/img/modal/logo_black.png" alt="Clean Leather Изделия из кожи ручной работы"></a>
+                <a href="/"><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></a>
+            </div>
+            <div class="modal-body">
+                @{
+                    string pb = ViewData["error"].ToString() == "" ? "Вы подписались на рассылку новостей о новых изделиях на нашем сайте. Спасибо за проявленный интерес!" : "Вы ввели некорректный email!";
+                }
+                <p>@pb</p>
+            </div>
+            <div class="modal-footer">
+                <a href="/"><button type="button" class="btn btn-dark">Ок</button></a>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+

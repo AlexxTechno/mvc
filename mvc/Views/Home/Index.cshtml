@@ -1,0 +1,81 @@
+﻿@using mvc.Models
+@model ProductCategory
+
+@{
+    ViewData["Title"] = "Clean Leather Изделия из кожи ручной работы";
+    ViewData["Description"] = "На сайте представлены изделия из кожи ручной работы от производителя Clean Leather. Мужские и женские кожаные сумки и клатчи, кожаные портмоне, кошельки, визитницы, монетницы.Кожаные ключницы и футляры для очков, а также различные полезные кожаные мелочи. Надежные, прочные удобные и красивые товары будут долго радовать своих владельцев и приносить им пользу.";
+    ViewData["Products"] = Model.Prod.Count().ToString();
+    ViewData["Orders"] = "322";
+    ViewData["Clients"] = "230";
+    ViewData["Process"] = "10";
+    Layout = "_LayoutHome";  // было  _Layout
+}
+
+<h1 hidden>Clean Leather Изделия из кожи ручной работы</h1>
+<!-- Page Content Start -->
+<div id='gallery'></div>
+<div class="page-content">
+    <!-- Gallery Area Start -->
+    <section class="gallery-area pt-95 pb-70">
+        <div class="container">
+            <!-- Latest Shot Main Area Start -->
+            <div class="our-gallery">
+                <div class="row">
+                    <!-- Section Titel -->
+                    <div class="col-md-12">
+                        <div class="section-titel text-right">
+                            <h2>Галерея изделий</h2>
+                            <!--   <p>Тут представлены все модели, разработанные в нашей мастерской и доступные для заказа.</p> -->
+                        </div>
+                    </div>
+                    <!-- Section Titel -->
+                </div>
+                <!-- Latest Shot/Portfolio Menu Tab -->
+                <div class="gallery">
+                    <ul class="text-center gallery-menu">
+                        <li class="active" data-filter="*">ВСЕ</li>
+
+                        @foreach (var cat in Model.Cat)
+                        {
+                            <li class="filter" data-filter=".@cat.Slug">@cat.Title</li>
+                        }
+
+                    </ul>
+                </div>
+
+                <!-- Latest Shot/Portfolio Menu Tab -->
+                <div class="grid gallery-box">
+                    <div class="gallery-content">
+
+                        @foreach (var prod in Model.Prod.OrderBy(n => n.Number))
+                        {
+                            <div class="grid-item col-lg-4 col-md-6 col-sm-12 @prod.Sku.Substring(0,2)">
+                                <!-- Latest Shot/Portfolio Single -->
+                                <div class="gallery-single style-two">
+                                    <div class="gallery-image">
+                                        @if (prod.Image.Where(img => img.ImageTypeId == 1).FirstOrDefault().Guide != null)
+                                        {
+                                            <img src="@prod.Image.Where(img => img.ImageTypeId == 1).FirstOrDefault().Guide">
+                                            <a href="@prod.Image.Where(img => img.ImageTypeId == 1).FirstOrDefault().Guide" class="portfolio-zoom-button popup-gallery"><i class="icofont-search" title="Увеличить"></i></a>
+                                        }
+
+                                    </div>
+                                    <div class="gallery-meta text-center">
+                                        <h5><a href="/product/show/@prod.Id" title="Подробнее">@prod.Title</a></h5>
+                                        <h6>@prod.Category.Title</h6>    <!-- Категория товара-->
+                                        <span>размер:</span><span style="color: #e2a750"> @prod.Dimension</span>
+                                        <span>цена:</span><span style="color: #e2a750"> @prod.Price<i class="icofont icofont-rouble"></i></span>
+                                    </div>
+                                </div>
+                                <!-- Latest Shot/Portfolio Single -->
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        <!-- Latest Shot Main Area End -->
+        </div>
+    </section>
+    <!-- Gallery Area End -->
+</div>
+<!-- Page Content End -->

@@ -1,0 +1,315 @@
+﻿@using mvc.Models
+@model ProductCategory
+@{
+    ViewData["Title"] = "Clean Leather Админка  Все товары";
+    ViewData["ext"] = ".png";
+    ViewData["sep"] = "-";
+    Layout = "~/Views/Shared/_LayoutDash.cshtml";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Все товары сайта</h1>
+    <p>Работа с базой данных по товарам.</p>
+</div>
+<div class="row">
+    <div class="col-md-12">
+
+        <table id="content-table" class="table table-secondary table-bordered" style="color: #6c757d; height: auto;">
+            <thead>
+                <tr>
+                    <th>Id<hr>№<hr>Sku</th>
+                    <th>Товар<hr>Цена<hr>Размер</th>
+                    <th>Описание</th>
+                    <th>Картинки<hr>Видео</th>
+                    <th>
+                        <button type="button" id="addProd" class="btn" data-bs-toggle="modal">
+                            <img src="/img/dash/plus20.png" alt="Создать товар" title="Создать">
+                        </button>
+                    </th>
+                </tr>
+            </thead>
+            <tbody id="tbody">
+                @foreach (var prod in Model.Prod.OrderBy(n => n.Number))
+                {
+                    <tr>
+                        <td>
+                            <h5>@prod.Id</h5><hr><h5>@prod.Number</h5><hr><h5>@prod.Sku</h5><hr>
+                            @{ if (prod.IsPublished)
+                                {
+                                    <button type="button" class="btn-outline-success"><img src="/img/dash/eye-icon.png" alt="" title="Опубликовано"></button>
+                                }
+                                else
+                                {
+                                    <button type="button" class="btn-outline-danger"><img src="/img/dash/eye-cross-icon.png" alt="" title="Не опубликовано"></button>
+                                }
+                            }
+                            <hr>
+                            @if (prod.IsNew)
+                            {
+                                <button type="button" class="btn-outline-success btn-sm" alt="" title="Новинка"><bold>new</bold></button>
+                            }
+                        </td>
+                        <td>
+                            <h5><a href="/product/show/@prod.Id" title="Просмотреть страницу изделия">@prod.Title</a></h5><hr>
+                            <h6>@prod.Category.Title</h6><hr>
+                            <h5>@(prod.Price)р<br><del>@prod.PriceBig</del>р</h5><hr>
+                            <h6>@prod.Dimension</h6>
+                        </td>
+                        <td>
+                            @prod.Description<hr><bold>Кратко:</bold><br>
+
+                            @{string[] summary = prod.Summary.Split('&'); }
+                            <ul>
+                                @foreach (string sum in summary)
+                                {
+                                    <li>@sum</li>
+                                }
+                            </ul>
+                            <hr><bold>Материалы:</bold><br>
+                            @{string[] materials = prod.Materials.Split('&'); }
+                            <ul>
+                                @foreach (string mat in materials)
+                                {
+                                    <li>@mat</li>
+                                }
+                            </ul>
+                        </td>
+                        <td>
+                            <img src="/@prod.Image.Where(img => img.ImageTypeId == 1).FirstOrDefault().Guide" alt="@prod.Title" width="120"><hr>
+                            <img src="@prod.Image.Where(img => img.ImageTypeId == 3).FirstOrDefault().Guide" alt="@prod.Title" width="120"><hr>
+
+                            @if (prod.Image.Where(img => img.ImageTypeId == 4).FirstOrDefault() != null)
+                            {
+                                string img = prod.Image.Where(img => img.ImageTypeId == 4).FirstOrDefault().Guide;
+                                var quan = prod.Image.Where(img => img.ImageTypeId == 4).FirstOrDefault().Quan;
+
+                                @for (int i = 1; i <= Convert.ToInt32(quan); i++)
+                                {
+                                    <p><img src="@img@prod.Sku@ViewData["sep"]@i@ViewData["ext"]" alt="@prod.Title" width="120"></p>
+                                }
+                            }
+
+                            @if (prod.Video != null)
+                            {
+                                <hr>
+                                <div class="row justify-content-center">
+                                    <span class="btnvideo" data-video="/@prod.Video.Guide"><button type="button" class="btn-outline-success" title="Посмотреть видео"><img src="/img/dash/video.png" alt="Видео" title="Посмотреть"></button></span>
+                                </div>
+                            }
+                        </td>
+                        <td>
+                            @{ // проверка на наличие данных для передачи их в кнопки
+                                string imghome;
+                                string imgnew;
+                                string imgone;
+                                string imggal;
+                                string imggalquan;
+                                string video;
+
+                                int imghomeId;
+                                int imgnewId;
+                                int imgoneId;
+                                int imggalId;
+                                int videoId;
+
+                                if (prod.Image.Where(img => img.ImageTypeId == 1).FirstOrDefault() != null)
+                                {
+                                    imghome = prod.Image.Where(img => img.ImageTypeId == 1).FirstOrDefault().Guide;
+                                    imghomeId = prod.Image.Where(img => img.ImageTypeId == 1).FirstOrDefault().Id;
+                                }
+                                else { imghome = ""; imghomeId = 0; }
+
+                                if (prod.Image.Where(img => img.ImageTypeId == 2).FirstOrDefault() != null)
+                                {
+                                    imgnew = prod.Image.Where(img => img.ImageTypeId == 2).FirstOrDefault().Guide;
+                                    imgnewId = prod.Image.Where(img => img.ImageTypeId == 2).FirstOrDefault().Id;
+                                }
+                                else { imgnew = ""; imgnewId = 0; }
+
+                                if (prod.Image.Where(img => img.ImageTypeId == 3).FirstOrDefault() != null)
+                                {
+                                    imgone = prod.Image.Where(img => img.ImageTypeId == 3).FirstOrDefault().Guide;
+                                    imgoneId = prod.Image.Where(img => img.ImageTypeId == 3).FirstOrDefault().Id;
+                                }
+                                else { imgone = ""; imgoneId = 0; }
+
+                                if (prod.Image.Where(img => img.ImageTypeId == 4).FirstOrDefault() != null)
+                                {
+                                    imggal = prod.Image.Where(img => img.ImageTypeId == 4).FirstOrDefault().Guide;
+                                    imggalId = prod.Image.Where(img => img.ImageTypeId == 4).FirstOrDefault().Id;
+                                    imggalquan = prod.Image.Where(img => img.ImageTypeId == 4).FirstOrDefault().Quan.ToString();
+                                }
+                                else
+                                {
+                                    imggal = "";
+                                    imggalquan = "0";
+                                    imggalId = 0;
+                                }
+
+                                if (prod.Video != null) { video = prod.Video.Guide; videoId = prod.Video.Id; }
+                                else { video = ""; videoId = 0; }
+                            }
+                            <span class="editProd" data-id="@prod.Id" data-number="@prod.Number" data-title="@prod.Title" data-sku="@prod.Sku" data-isnew="@prod.IsNew" data-ispublished="@prod.IsPublished" data-dimension="@prod.Dimension" data-price="@prod.Price" data-pricebig="@prod.PriceBig" data-description="@prod.Description" data-categoryid="@prod.CategoryId" data-summary="@prod.Summary" data-materials="@prod.Materials" data-imghome="@imghome" data-imghomeid="@imghomeId" data-imgnew="@imgnew" data-imgnewid="@imgnewId" data-imgone="@imgone" data-imgoneid="@imgoneId" data-imggal="@imggal"  data-imggalId="@imggalId" data-imggalquan="@imggalquan" data-video="@video" data-videoId="@videoId">
+                                <button class="btn"><img src="/img/dash/chg16.png" alt="Изменить" title="Изменить"></button>
+                            </span>                            
+                            <span class="delProd" data-id="@prod.Id"><button class="btn"><img src="/img/dash/del16.png" alt="Удалить" title="Удалить"></button></span><br>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Modal Edit & New Product -->
+<div class="modal fade" id="editProduct">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="headlabel">Редактирование изделия</h5>
+            </div>
+            <form id="prodEdit" action="/dash/prodedit" method="post">
+                <div class="modal-body">
+                    <input name="id" type="hidden" value="">
+                    <input name="imghomeid" type="hidden" value="">
+                    <!-- <input name="imgnewid" type="hidden" value=""> -->
+                    <input name="imgoneid" type="hidden" value="">
+                    <input name="imggalid" type="hidden" value="">
+                    <input name="videoid" type="hidden" value="">
+                    <div class="input-group mb-2">
+                        <span class="input-group-text" id="inputGroup-sizing-default">Название *</span>
+                        <input name="title" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" required>
+                        <span class="input-group-text" id="inputGroup-sizing-default">
+                            Публикация
+                            <input name="ispublished" class="ml-5" type="checkbox">
+                        </span>
+                    </div>
+                    <div class="input-group mb-2">
+                        <span class="input-group-text" id="inputGroup-sizing-default">Категория *</span>
+                        <select id="cat" class="form-select" name="category" aria-label="Пример выбора по умолчанию">
+                            <option selected>Выбрать</option>
+                            @foreach (var cat in Model.Cat.Where(p => p.IsPublished == true))
+                            {
+                                <option value="@cat.Id">@cat.Title</option>
+                            }
+                        </select>
+                        <span class="input-group-text" id="inputGroup-sizing-default">№ *</span>
+                        <input name="number" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" required>
+                        <span class="input-group-text" id="inputGroup-sizing-default">
+                            Новинка
+                            <input name="isnew" class="ml-5" type="checkbox" id="isnew">
+                        </span>
+                    </div>
+                    <div class="input-group mb-2">
+                        <span class="input-group-text" id="inputGroup-sizing-default">Sku *</span>
+                        <input name="sku" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" required>
+                        <span class="input-group-text" id="inputGroup-sizing-default">Размер *</span>
+                        <input name="dimension" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" required>
+                    </div>
+                    <div class="input-group mb-2">
+                        <span class="input-group-text" id="inputGroup-sizing-default">Цена *</span>
+                        <input name="price" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" required>
+                        <span class="input-group-text" id="inputGroup-sizing-default"><del>Цена</del></span>
+                        <input name="pricebig" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                    </div>
+                    <div class="input-group mb-2">
+                        <span class="input-group-text" id="inputGroup-sizing-default">Описание *</span>
+                        <textarea name="description" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" required></textarea>
+                    </div>
+                    <div class="input-group mb-2">
+                        <span class="input-group-text" id="inputGroup-sizing-default">Кратко *</span>
+                        <textarea name="summary" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" required></textarea>
+                    </div>
+                    <div class="input-group mb-2">
+                        <span class="input-group-text" id="inputGroup-sizing-default">Материалы *</span>
+                        <textarea name="materials" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" required></textarea>
+                    </div>
+                    <hr>
+                    <h5>Картинки и видео</h5>
+                    <hr>
+                    <div class="input-group mb-2">
+                        <span class="input-group-text" id="inputGroup-sizing-default">Home *</span>
+                        <input name="imghome" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" required>
+                    </div>
+                    <!--
+                        <div class="input-group mb-2">
+                            <span class="input-group-text" id="inputGroup-sizing-default">New</span>
+                            <input name="imgnew" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                        </div>
+                    -->
+                    <div class="input-group mb-2">
+                        <span class="input-group-text" id="inputGroup-sizing-default">One *</span>
+                        <input name="imgone" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" required>
+                    </div>
+                    <div class="input-group mb-2">
+                        <span class="input-group-text" id="inputGroup-sizing-default">Gallery</span>
+                        <input name="imggal" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" placeholder="Путь к папке с файлами">
+                        <span class="input-group-text" id="inputGroup-sizing-default">Кол-во</span>
+                        <select id="quansel" class="form-select" name="quansel" aria-label="Пример выбора по умолчанию">
+                            <option selected>Выбрать</option>
+                            <option value="0">0</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                        </select>
+                    </div>
+                    <div class="input-group mb-2">
+                        <span class="input-group-text" id="inputGroup-sizing-default">Видео</span>
+                        <input name="video" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <span class="close"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button></span>
+                    <span class="subm"><button type="submit" class="btn btn-primary">Сохранить</button></span>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Delete Product -->
+<div class="modal fade" id="delProduct">
+    <div class="modal-dialog">
+        <div class="alert alert-danger" role="alert">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Удаление изделия!</h5>
+            </div>
+            <div class="modal-body">
+                Вы действительно хотите БЕЗВОЗВРАТНО удалить выбранное изделие?
+            </div>
+            <div class="modal-footer">
+                <span class="close"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button></span>
+                <span class="deleteProd"><button class="btn btn-primary">Удалить</button></span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Video-->
+<div class="modal fade" id="video">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Видео изделия</h5>
+                <span class="close"><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></span>
+            </div>
+            <div class="modal-body">
+                <div class="ratio">
+                    <!--  ratio-16x9 -->
+                    <iframe id="iframe" src="" title="Video" allowfullscreen></iframe>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <span class="close"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button></span>
+            </div>
+        </div>
+    </div>
+</div>
+

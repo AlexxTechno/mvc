@@ -1,0 +1,14 @@
+﻿hr {
+    color: #8ea0af;
+}
+
+th {
+    vertical-align: middle; 
+    text-align: center;
+}
+
+td h5, td h6 {
+    color: #9d7212;
+    white-space: normal;
+    text-align: center;
+}

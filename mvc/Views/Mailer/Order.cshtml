@@ -1,0 +1,35 @@
+﻿@{
+    ViewData["Tille"] = "Clean Leather Изделия из кожи Заказ с сайта";
+    ViewData["Description"] = "Clean Leather Изделия из кожи Заказ с сайта";
+    Layout = "_LayoutMailer";  // было  _Layout
+}
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <a href="/"><img src="/img/modal/logo_black.png" alt="Clean Leather Изделия из кожи ручной работы"></a>
+            <a href="/"><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></a>
+        </div>
+        <div class="modal-body">
+            <p>@ViewData["name"],</p>
+            <p>сообщение о заказе отправлено.</p>
+            <p>В ближайшее время мы свяжемся с Вами.</p>
+            <p>Спасибо за проявленный интерес!</p>
+        </div>
+        <div class="modal-footer">
+            <a href="/"><button type="button" class="btn btn-dark">Ок</button></a>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,106 @@
+﻿<footer class="bg-5 bg-overlay-2">
+    <!-- Footer Top Area Start -->
+    <div class="footer-top ptb-90">
+        <div class="container">
+            <div class="row">
+                <!-- Footer Single Item -->
+                <div class="col-lg-3 col-md-6 col-sm-12">
+                    <div class="footer-single">
+                        <h5>Оставайтесь с нами</h5>
+                        <div class="stay-with-content">
+                            <p>Для того чтобы быстро узнавать о новых интересных изделиях оставьте Ваш e-mail. </p>
+                            <div class="subcribe">
+                                <form action="/mailer/subscribe" method="post">
+                                    <input autocomplete="off" name="email" placeholder="E-mail" type="text" required />
+                                    <button type="submit" class="search-button">Подписаться</button>
+                                    <!-- mailchimp-alerts Start -->
+                                    <div class="mailchimp-alerts text-centre">
+                                        <div class="mailchimp-submitting"></div><!-- mailchimp-submitting end -->
+                                        <div class="mailchimp-success"></div><!-- mailchimp-success end -->
+                                        <div class="mailchimp-error"></div><!-- mailchimp-error end -->
+                                    </div>
+                                    <!-- mailchimp-alerts end -->
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Footer Single Item -->
+                <!-- Footer Single Item -->
+                <div class="col-lg-3 col-md-6 col-sm-12">
+                    <div class="footer-single">
+                        <h5><a href="/products">Изделия</a></h5>
+                        <div class="footer-menu">
+
+                            <!-- Menu -->
+                            @await Html.PartialAsync("~/Views/Home/_PartialMenu.cshtml")
+
+                        </div>
+                    </div>
+                </div>
+                <!-- Footer Single Item -->
+                <!-- Footer Single Item -->
+                <div class="col-lg-3 col-md-6 col-sm-12">
+                    <div class="footer-single">
+                        <h5>Ссылки</h5>
+                        <div class="footer-menu">
+                            <ul>
+                                <li><a href="/#gallery">Галерея</a></li>
+                                <li><a href="/#about">О проекте</a></li>
+                                <li><a href="/#contact">Связаться</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <!-- Footer Single Item -->
+                <!-- Footer Single Item -->
+                <div class="col-lg-3 col-md-6 col-sm-12">
+                    <div class="footer-single">
+                        <h5>Контакты</h5>
+                        <div class="contact-info">
+                            <ul>
+                                <!--	<li>
+                                        <p>Адрес:  House. 4, Rosd. 7, East city. Orled. Sydney. Australya.</p>
+                                    </li>
+                                -->
+                                <li>
+                                    <p>Тел.:  +3 8 (071) 441-34-58</p>
+                                </li>
+                                <li>
+                                    <p>E-mail: job@cleal.ru</p>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <!-- Footer Single Item -->
+            </div>
+        </div>
+    </div>
+    <!-- Footer Top Area End -->
+    <!-- Footer Bottom Area Start -->
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="footer-bottom">
+                    <div class="footer-left">
+                        <p>Copyright © <a href="#">Clean●Leather</a></p>
+                    </div>
+
+                    <!--  соц сети
+                    <div class="footer-right-social f-right">
+                        <ul>
+                            <li><a href="#"><i class="icofont icofont-facebook"></i></a></li>
+                            <li><a href="#"><i class="icofont icofont-pinterest"></i></a></li>
+                            <li><a href="#"><i class="icofont icofont-twitter"></i></a></li>
+                            <li><a href="#"><i class="icofont icofont-google-plus"></i></a></li>
+                        </ul>
+                    </div>
+                    -->
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Footer Bottom Area End -->
+</footer>

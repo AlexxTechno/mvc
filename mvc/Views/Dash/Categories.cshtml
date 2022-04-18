@@ -1,0 +1,149 @@
+﻿@using mvc.Models
+@model IEnumerable<Category>
+@{
+    ViewData["Title"] = "Clean Leather Админка  Все категории";
+    Layout = "~/Views/Shared/_LayoutDash.cshtml";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Все категории товаров сайта</h1>
+    <p>Работа с базой данных по категориям.</p>
+</div>
+<div class="row">
+    <div class="col-md-12">
+
+        <table id="content-table" class="table table-secondary table-bordered" style="color: #6c757d; height: auto;">
+            <thead>
+                <tr>
+                    <th>Id<hr>№</th>
+                    <th>Категория<hr>Slug</th>
+                    <th>Описание</th>
+                    <th>Публикация</th>
+                    <th>
+                        <button type="button" id="addCat" class="btn" data-bs-toggle="modal">
+                            <img src="/img/dash/plus20.png" alt="Создать категорию">
+                        </button>
+                    </th>
+                </tr>
+            </thead>
+            <tbody id="tbody">
+                @foreach (var cat in Model)
+                {
+                    <tr>
+                        <td><h5>@cat.Id</h5><hr><h5>@cat.Number</h5></td>
+                        <td><h5>@cat.Title</h5><hr><h6>@cat.Slug</h6></td>
+                        <td>@cat.Description</td>
+                        <td>
+                            @{ if (cat.IsPublished)
+                                {
+                                    <button class="btn-outline-success"><img src="/img/dash/eye-icon.png" alt="" title="Опубликовано"></button>
+                                }
+                                else
+                                {
+                                    <button class="btn-outline-danger"><img src="/img/dash/eye-cross-icon.png" alt="" title="Не опубликовано"></button>
+                                }
+                            }
+                        </td>
+                        <td>
+                            <span class="editCat" data-id="@cat.Id" data-title="@cat.Title" data-slug="@cat.Slug" data-description="@cat.Description" data-number="@cat.Number" data-ispublished="@cat.IsPublished"><button class="btn"><img src="/img/dash/chg16.png" alt="Изменить" title="Изменить"></button></span>
+                            <span class="delCat" data-id="@cat.Id"><button class="btn"><img src="/img/dash/del16.png" alt="Удалить" title="Удалить"></button></span><br />
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Modal Add Category -->
+<div class="modal fade" id="addCategory">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Добавление новой категории изделий</h5>
+            </div>
+            <form action="/dash/catnew" method="post">
+                <div class="modal-body">
+                    <div class="input-group mb-3">
+                        <span class="input-group-text" id="inputGroup-sizing-default">Категория</span>
+                        <input name="title" type="text" class="form-control" aria-label="Sizing example input" placeholder="Наименование категории" aria-describedby="inputGroup-sizing-default" required>
+                        <span class="input-group-text" id="inputGroup-sizing-default">
+                            Публикация
+                            <input name="ispublished" class="ml-5" type="checkbox">
+                        </span>
+                    </div>
+                    <div class="input-group mb-2">
+                        <span class="input-group-text" id="inputGroup-sizing-default">№</span>
+                        <input name="number" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" required>
+                        <span class="input-group-text" id="inputGroup-sizing-default">Slug</span>
+                        <input name="slug" type="text" class="form-control" aria-label="Sizing example input" placeholder="Коротко" aria-describedby="inputGroup-sizing-default" required>
+                    </div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text" id="inputGroup-sizing-default">Описание</span>
+                        <input name="description" type="text" class="form-control" aria-label="Sizing example input" placeholder="Описание категории" aria-describedby="inputGroup-sizing-default" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <span class="close"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button></span>
+                    <button type="submit" class="btn btn-primary">Сохранить</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Edit Category -->
+<div class="modal fade" id="editCategory">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Изменение категории изделий</h5>
+            </div>
+            <form action="/dash/catedit/" method="post">
+                <div class="modal-body">
+                    <input name="id" type="hidden" value="">
+                    <div class="input-group mb-3">
+                        <span class="input-group-text" id="inputGroup-sizing-default">Категория</span>
+                        <input name="title" type="text" class="form-control" aria-label="Sizing example input" placeholder="Наименование категории" aria-describedby="inputGroup-sizing-default" required>
+                        <span class="input-group-text" id="inputGroup-sizing-default">
+                            Публикация
+                            <input name="ispublished" class="ml-5" type="checkbox">
+                        </span>
+                    </div>
+                    <div class="input-group mb-2">
+                        <span class="input-group-text" id="inputGroup-sizing-default">№</span>
+                        <input name="number" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" required>
+                        <span class="input-group-text" id="inputGroup-sizing-default">Slug</span>
+                        <input name="slug" type="text" class="form-control" aria-label="Sizing example input" placeholder="Коротко" aria-describedby="inputGroup-sizing-default" required>
+                    </div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text" id="inputGroup-sizing-default">Описание</span>
+                        <input name="description" type="text" class="form-control" aria-label="Sizing example input" placeholder="Описание категории" aria-describedby="inputGroup-sizing-default" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <span class="close"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button></span>
+                    <button type="submit" class="btn btn-primary">Сохранить</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Delete Category -->
+<div class="modal fade" id="delCategory">
+    <div class="modal-dialog">
+        <div class="alert alert-danger" role="alert">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Удаление категории изделий!</h5>
+            </div>
+            <div class="modal-body">
+                    Вы действительно хотите БЕЗВОЗВРАТНО удалить выбранную категорию?
+            </div>
+            <div class="modal-footer">
+                <span class="close"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button></span>
+                <span class="deleteCat"><button class="btn btn-primary">Удалить</button></span>
+            </div>
+        </div>
+    </div>
+</div>

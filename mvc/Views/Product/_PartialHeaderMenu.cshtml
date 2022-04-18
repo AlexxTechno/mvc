@@ -1,0 +1,76 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+<!-- Header Menu Area Start -->
+<div class="header-menu mt-25 border-bottom" id="sticky-header">
+    <div class="container">
+        <div class="row">
+            <!-- Logo Area Start -->
+            <div class="col-lg-4 col-md-12 col-sm-12">
+                <div class="logo-img">
+                    <a href="/"><img src="/img/home/logo_white.png" alt="Clean Leather Изделия из кожи ручной работы"></a>
+                </div>
+            </div>
+            <!-- Logo Area End -->
+            <!-- Menu Area Start -->
+            <div class="col-lg-8 col-md-8 col-sm-12">
+                <div class="main-menu text-right">
+                    <nav>
+                        <ul>
+                            <li class="active">
+                                <a href="/products">Изделия</a>
+
+                                <!-- Menu -->
+                                @await Html.PartialAsync("~/Views/Home/_PartialMenu.cshtml")
+
+                            </li>
+                            <li><a href="/#gallery">Галерея</a></li>
+                            <!--   <li><a href="/#new">Новинки</a></li>   href="contact-us.html"   -->
+                            <li><a href="/#service">Услуги</a></li>    <!--  href="service.html"   -->
+                            <li><a href="/#about">О проекте</a></li>	    <!--  href="about-us.html"   -->
+                            <li><a href="/#contact">Контакты</a></li>    <!--  href="contact-us.html" -->
+
+                            @if (SignInManager.IsSignedIn(User))
+                            {
+                                <li><a href="/dash">Dash</a></li>
+                            }
+
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+            <!-- Header Menu Area Start -->
+        </div>
+    </div>
+    <!-- MOBILE-MENU-AREA START -->
+    <div class="mobile-menu-area">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 col-sm-12">
+                    <div class="mobile-area">
+                        <div class="mobile-menu">
+                            <nav id="mobile-nav">
+                                <ul>
+                                    <li class="active">
+                                        <a href="/products">Изделия</a>
+
+                                        <!-- Menu -->
+                                        @await Html.PartialAsync("~/Views/Home/_PartialMenu.cshtml")
+
+                                    </li>
+                                    <li><a href="/#gallery">Галерея</a></li>  <!--  href="contact-us.html"   -->
+                                    <!--  <li><a href="/#new">Новинки</a></li>   href="contact-us.html"   -->
+                                    <li><a href="/#service">Услуги</a></li>   <!--  href="service.html"   -->
+                                    <li><a href="/#about">О проекте</a></li>  <!-- href="about-us.html" -->
+                                    <li><a href="/#contact">Контакты</a></li> <!-- href="gallery-three-container-style-two.html" -->
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- MOBILE-MENU-AREA END  -->
+</div>
+<!-- Header Menu Area END-->
