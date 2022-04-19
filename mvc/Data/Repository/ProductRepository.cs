@@ -20,9 +20,9 @@ namespace mvc.Data.Repository
 
         public IEnumerable<Product> AllProduct => applicationDb.Product.Include(prod => prod.Category).Include(img => img.Image).Include(prod => prod.Video);
 
-        public IEnumerable<Product> IsPublishedProduct => applicationDb.Product.Include(prod => prod.Category).Include(img => img.Image).Include(prod => prod.Video).Where(prod => prod.IsPublished == true).Where(prod => prod.Category.IsPublished == true);
+        public IEnumerable<Product> IsPublishedProduct => applicationDb.Product.Where(prod => prod.IsPublished).Include(prod => prod.Category).Where(prod => prod.Category.IsPublished).Include(img => img.Image).Include(prod => prod.Video);
 
-        public IEnumerable<Product> IsNewProduct => applicationDb.Product.Where(prod => prod.IsNew).Include(prod => prod.Category).Include(img => img.Image).Include(prod => prod.Video).Where(prod => prod.IsNew == true);
+        public IEnumerable<Product> IsNewProduct => applicationDb.Product.Where(prod => prod.IsNew).Include(prod => prod.Category).Include(img => img.Image).Include(prod => prod.Video);
 
         public Product GetObjectProduct(int productId) => applicationDb.Product.Include(img => img.Image).Include(prod => prod.Category).Include(prod => prod.Video).First(prod => prod.Id == productId);
     }
