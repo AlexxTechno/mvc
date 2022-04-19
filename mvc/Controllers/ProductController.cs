@@ -44,7 +44,7 @@ namespace mvc.Controllers
             OneProductCategory prodcat = new OneProductCategory
             {
                 Cat = _iAllCategory.IsPublishedCategory,
-                Prod = _iProduct.getObjectProduct(id)
+                Prod = _iProduct.GetObjectProduct(id)
             };
             return View(prodcat); 
         }

@@ -14,7 +14,7 @@ namespace mvc.Interfaces
 
         IEnumerable<Product> IsNewProduct { get; }  // set;
 
-        Product getObjectProduct(int productId);
+        Product GetObjectProduct(int productId);
 
     }
 }
