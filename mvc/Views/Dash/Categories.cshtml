@@ -133,17 +133,22 @@
 <!-- Modal Delete Category -->
 <div class="modal fade" id="delCategory">
     <div class="modal-dialog">
-        <div class="alert alert-danger" role="alert">
+        <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Удаление категории изделий!</h5>
             </div>
-            <div class="modal-body">
-                    Вы действительно хотите БЕЗВОЗВРАТНО удалить выбранную категорию?
-            </div>
-            <div class="modal-footer">
-                <span class="close"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button></span>
-                <span class="deleteCat"><button class="btn btn-primary">Удалить</button></span>
-            </div>
+            <form action="/dash/catdel" method="post">
+                <input name="id" type="hidden" value="">
+                <div class="modal-body">
+                    <div class="alert alert-danger" role="alert">
+                        Вы действительно хотите БЕЗВОЗВРАТНО удалить выбранную категорию?
+                    </div>                    
+                </div>
+                <div class="modal-footer">
+                    <span class="close"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button></span>
+                    <button type="submit" class="btn btn-primary">Удалить</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

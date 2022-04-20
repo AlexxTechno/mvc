@@ -31,7 +31,7 @@
 
             var imggalquan;    // количество фоток в галерее
             var categoryid;
-            var url;
+            //var url;
 
             //--- Modal Product Add New --------
             $("#addProd").on("click", function () {
@@ -124,10 +124,6 @@
 
                 // показываю окно с формой после изменения параметров формы
                 $('#editProduct').modal('show');
-
-                console.log(imghomeid);
-                console.info(imghomeid);
-
             });
 
             //--- Modal Product Delete Show Modal --------
@@ -135,20 +131,32 @@
 
                 // получаю id редактируемого товара
                 id = $(this).data("id");
+                $('#delProduct [name="id"]').val(id);
 
                 // показываю окно с формой после изменения параметров формы
                 $('#delProduct').modal('show');
             });
 
             //--- Redirect Product Delete Submit Button ---
-            $(".deleteProd").on("click", function () {
-                url = "/dash/proddel/" + id;
-                location.href = url;
-            });
+            //$(".deleteProd").on("click", function () {
+            //    url = "/dash/proddel/" + id;
+            //    $(document).location.href = url;
+            //});
 
             //--- Modal Category Add New --------
             $("#addCat").on("click", function () {
                 $('#addCategory').modal('show');
+            });
+
+            //--- Modal Category Delete Show Modal --------
+            $(".delCat").on("click", function () {
+
+                // получаю id редактируемого товара
+                id = $(this).data("id");
+                $('#delCategory [name="id"]').val(id);
+
+                // показываю окно с формой после изменения параметров формы
+                $('#delCategory').modal('show');
             });
 
             //--- Modal Category Edit --------
@@ -161,6 +169,8 @@
                 description = $(this).data("description");
                 number = $(this).data("number");
                 ispublished = $(this).data("ispublished");
+
+                console.info(id);
 
                 // передача данных в форму по ID формы
                 $('#editCategory [name="id"]').val(id);
@@ -178,22 +188,20 @@
                 
             });
 
-            //--- Modal Category Delete Show Modal --------
-            $(".delCat").on("click", function () {
-
-                // получаю id редактируемого товара
-                id = $(this).data("id");
-
-                // показываю окно с формой после изменения параметров формы
-                $('#delCategory').modal('show');
-            });
+            
 
             //--- Redirect Category Delete Submit Button ---
+            /*
             $(".deleteCat").on("click", function () {
-                url = "/dash/catdel/" + id;
-                console.log(id);
-                location.href = url;
+               // url = "https://localhost:5001/dash/catdel/" + id;
+                url = "https://localhost:5001/dash"
+                window.location.replace(url);
+                //$(location).attr('href', url); - не работает 
+                //$(document).location.href = url; - не работает
+                //location.href = url; - не работает
+
             });
+            */
 
             //--- Modal Video --------
             $(".btnvideo").on("click", function () {
@@ -208,10 +216,11 @@
 
             // закрываем/прячем все модальные окна по классу
             $(".close").on("click", function () {
-                $('#editCategory').modal('hide');
-                $('#delCategory').modal('hide');
                 $('#addCategory').modal('hide');
+                $('#editCategory').modal('hide');
+                $('#delCategory').modal('hide');                
                 $('#editProduct').modal('hide');
+                $('#delProduct').modal('hide');
                 $('#video').modal('hide');
             });
         });

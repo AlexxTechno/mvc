@@ -96,7 +96,7 @@ namespace mvc.Controllers
                     ModelState.AddModelError("", "Не получилось внести изменения в модель Product.");
                 }
 
-                int id = await _applicationDb.Product.MaxAsync(prod => prod.Id);
+                int id = _applicationDb.Product.Max(prod => prod.Id);
 
                 //-- вносим изменения в картинки --
                 //- основная на главной                             
@@ -376,88 +376,25 @@ namespace mvc.Controllers
         /// Delete Product and Redirect To All
         /// </summary>
         /// <returns></returns>
-        [Route("/dash/proddel/{id}")]
-        public async Task<IActionResult> ProdDel(int id)
+        [Route("/dash/proddel")]
+        public async Task<IActionResult> ProdDel()
         {
+            int id = Convert.ToInt32(Request.Form["id"]);
             if (id != 0)
             {
-                //-удаляем товар
-                Product product = new Product { Id = id };
+                //-удаляем товар и все связанные картинки и видео - каскадно
+                //var product = await _applicationDb.Product.FindAsync(id); // работает но для каскада не годится
+                var product = _applicationDb.Product.Include(p => p.Image).Include(p => p.Video).FirstOrDefault(p => p.Id == id);
                 try
                 {
-                    _applicationDb.Product.Remove(product);
+                    _applicationDb.Remove(product);
                     await _applicationDb.SaveChangesAsync();
                 }
-                catch (DbUpdateException /* ex */)
+                catch (DbUpdateException) // ex
                 {
                     //Log the error (uncomment ex variable name and write a log.)
-                    ModelState.AddModelError("", "Не получилось удалить изделие в модели Product.");
-                }
-
-                //-удаляем видео, если есть
-                var video = await _applicationDb.Video.FirstOrDefaultAsync(v => v.ProductId == id);
-                if (video != null)
-                {
-                    try
-                    {
-                        _applicationDb.Video.Remove(video);
-                        await _applicationDb.SaveChangesAsync();
-                    }
-                    catch (DbUpdateException /* ex */)
-                    {
-                        //Log the error (uncomment ex variable name and write a log.)
-                        ModelState.AddModelError("", "Не получилось удалить запись в модели Video.");
-                    }
-                }
-
-                //-удаляем все картинки
-                //-картинка галерея домашяя страница
-                var imghome = await _applicationDb.Image.Where(i => i.ImageTypeId == 1).FirstOrDefaultAsync(i => i.ProductId == id);
-                if (imghome != null)
-                {
-                    try
-                    {
-                        _applicationDb.Image.Remove(imghome);
-                        await _applicationDb.SaveChangesAsync();
-                    }
-                    catch (DbUpdateException /* ex */)
-                    {
-                        //Log the error (uncomment ex variable name and write a log.)
-                        ModelState.AddModelError("", "Не получилось удалить картинку на домашней в модели Image.");
-                    }
-                }
-
-                //-картинка галерея домашяя страница
-                var imgone = await _applicationDb.Image.Where(i => i.ImageTypeId == 3).FirstOrDefaultAsync(i => i.ProductId == id);
-                if (imgone != null)
-                {
-                    try
-                    {
-                        _applicationDb.Image.Remove(imgone);
-                        await _applicationDb.SaveChangesAsync();
-                    }
-                    catch (DbUpdateException /* ex */)
-                    {
-                        //Log the error (uncomment ex variable name and write a log.)
-                        ModelState.AddModelError("", "Не получилось удалить картинку на странице изделия под видео в модели Image.");
-                    }
-                }
-
-                //-картинка галерея на странице товара
-                var imggal = await _applicationDb.Image.Where(i => i.ImageTypeId == 4).FirstOrDefaultAsync(i => i.ProductId == id);
-                if (imggal != null)
-                {
-                    try
-                    {
-                        _applicationDb.Image.Remove(imggal);
-                        await _applicationDb.SaveChangesAsync();
-                    }
-                    catch (DbUpdateException /* ex */)
-                    {
-                        //Log the error (uncomment ex variable name and write a log.)
-                        ModelState.AddModelError("", "Не получилось удалить картинку на странице изделия галерея в модели Image.");
-                    }
-                }
+                    ModelState.AddModelError("", "Не получилось каскадно удалить Product и связанные записи Image, Video.");
+                }               
             }
             
             return Redirect("~/Dash/Products");
@@ -504,6 +441,7 @@ namespace mvc.Controllers
             }
             return Redirect("~/Dash/Categories");
         }
+
         /// <summary>
         /// Edit Category and Redirect To All
         /// </summary>
@@ -511,10 +449,9 @@ namespace mvc.Controllers
         [Route("/dash/catedit")]
         public async Task<IActionResult> CatEdit()
         {
-            if (Request.Form.FirstOrDefault().Value != "")
+            int id = Convert.ToInt32(Request.Form["id"]);
+            if (id != 0)
             {
-                int id = Convert.ToInt32(Request.Form["id"]);
-
                 var cat = await _applicationDb.Category.FindAsync(id);
 
                 cat.Title = Request.Form["title"];
@@ -536,26 +473,31 @@ namespace mvc.Controllers
             }
             return Redirect("~/Dash/Categories");
         }
+
         /// <summary>
         /// Delete Category and Redirect To All
         /// </summary>
         /// <returns></returns>
-        [Route("/dash/catdel/{id}")]
-        public async Task<IActionResult> CatDel(int id)
-        {
-            var cat = await _applicationDb.Category.FindAsync(id);
-            System.Diagnostics.Debug.WriteLine("Id категории");
-            System.Diagnostics.Debug.WriteLine(id);
-            try
+        [Route("/dash/catdel")]
+        public async Task<IActionResult> CatDel()
+        {            
+            int id = Convert.ToInt32(Request.Form["id"]);
+            if (id != 0)
             {
-                _applicationDb.Category.Remove(cat);
-                await _applicationDb.SaveChangesAsync();
-            }
-            catch (DbUpdateException)  //ex 
-            {
-                //Log the error (uncomment ex variable name and write a log.)
-                ModelState.AddModelError("", "Не получилось удалить категорию из модели Category.");
-            }     
+                // var cat = await _applicationDb.Category.FirstOrDefaultAsync(с => c.Id == id); // выдет ошибку
+                var cat = await _applicationDb.Category.FindAsync(id); // работает
+
+                try
+                {
+                    _applicationDb.Category.Remove(cat);
+                    await _applicationDb.SaveChangesAsync();
+                }
+                catch (DbUpdateException)  //ex 
+                {
+                    //Log the error (uncomment ex variable name and write a log.)
+                    ModelState.AddModelError("", "Не получилось удалить категорию из модели Category.");
+                }
+            }                 
             return Redirect("~/Dash/Categories");
         }
 

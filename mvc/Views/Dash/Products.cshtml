@@ -267,7 +267,7 @@
                 </div>
                 <div class="modal-footer">
                     <span class="close"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button></span>
-                    <span class="subm"><button type="submit" class="btn btn-primary">Сохранить</button></span>
+                    <button type="submit" class="btn btn-primary">Сохранить</button>
                 </div>
             </form>
         </div>
@@ -277,17 +277,22 @@
 <!-- Modal Delete Product -->
 <div class="modal fade" id="delProduct">
     <div class="modal-dialog">
-        <div class="alert alert-danger" role="alert">
+        <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Удаление изделия!</h5>
             </div>
-            <div class="modal-body">
-                Вы действительно хотите БЕЗВОЗВРАТНО удалить выбранное изделие?
-            </div>
-            <div class="modal-footer">
-                <span class="close"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button></span>
-                <span class="deleteProd"><button class="btn btn-primary">Удалить</button></span>
-            </div>
+            <form action="/dash/proddel" method="post">
+                <input name="id" type="hidden" value="">
+                <div class="modal-body">
+                    <div class="alert alert-danger" role="alert">
+                        Вы действительно хотите БЕЗВОЗВРАТНО удалить выбранное изделие?
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <span class="close"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button></span>
+                    <button type="submit" class="btn btn-primary">Удалить</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
