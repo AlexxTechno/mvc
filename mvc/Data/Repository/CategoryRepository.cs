@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using static mvc.Data.Repository.ProductRepository;
 
 namespace mvc.Data.Repository
 {
@@ -20,6 +21,8 @@ namespace mvc.Data.Repository
         public IEnumerable<Category> AllCategory => applicationDb.Category.OrderBy(cat => cat.Number);
 
         public IEnumerable<Category> IsPublishedCategory => applicationDb.Category.Include(cat => cat.Product).Where(cat => cat.IsPublished == true).OrderBy(cat => cat.Number);
+                                                                                                                            
+                                                                                                              
 
     /*    public IEnumerable<Category> IsPublishedCatalog => (IEnumerable<Category>)applicationDb.Category.Where(cat => cat.IsPublished == true).OrderBy(cat => cat.Number)
                                                                                        .Join(applicationDb.Product.Where(prod => prod.IsPublished == true).OrderBy(prod => prod.Number),

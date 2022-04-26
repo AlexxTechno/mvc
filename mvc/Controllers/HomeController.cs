@@ -29,7 +29,7 @@ namespace mvc.Controllers
                 Cat = _allCategory.IsPublishedCategory,
                 Prod = _allProduct.IsPublishedProduct
             };
-            return View(prodcat);     // было return View(); 
+            return View(prodcat);  
         }
     }
 }
