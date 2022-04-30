@@ -5,14 +5,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using static mvc.Data.Repository.ProductRepository;
 
 namespace mvc.Data.Repository
 {
     public class CategoryRepository : IAllCategory
     {
-        private readonly ApplicationDbContext applicationDb;
-       // private readonly Category category;
+        private readonly ApplicationDbContext applicationDb;       
 
         public CategoryRepository(ApplicationDbContext applicationDb) //, Category category
         {

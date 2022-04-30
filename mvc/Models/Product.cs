@@ -17,10 +17,10 @@ namespace mvc.Models {
         public int Price { set; get; }
         public int PriceBig { set; get; }
         public string Description { set; get; }
-        public int CategoryId { set; get; }
-        public virtual Category Category { set; get; }
+        public int CategoryId { set; get; }        
         public string Summary { set; get; }
         public string Materials { set; get; }
+        public virtual Category Category { set; get; }
         public virtual Video Video { set; get; }
         public List<Image> Image { set; get; }
     } 

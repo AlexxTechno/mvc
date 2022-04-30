@@ -10,8 +10,5 @@ namespace mvc.Interfaces {
         IEnumerable<Category> AllCategory { get; }
 
         IEnumerable<Category> IsPublishedCategory { get; }
-
-      //  IEnumerable<Category> IsPublishedCatalog { get; }
-
     }
 }

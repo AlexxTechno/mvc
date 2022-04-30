@@ -9,7 +9,7 @@
     ViewData["BackUrl"] = "/";
     ViewData["ModelSku"] = "все изделия";
     Layout = "_LayoutProduct";  // было  _Layout
-    string url = "/img/home/gallery/";
+    //string url = "/img/home/gallery/"; 
     string ext = ".png";
 }
 
@@ -42,8 +42,8 @@
                                         <div class="grid-item col-lg-4 col-md-6 col-sm-12 c1">
                                             <div class="gallery-single style-two">
                                                 <div class="gallery-image">                                                    
-                                                    <img src="@url@prod.Sku@ext" alt="">
-                                                    <a href="@url@prod.Sku@ext" class="portfolio-zoom-button popup-gallery"><i class="icofont-search" title="Увеличить"></i></a>
+                                                    <img src="@ViewData["url"]@prod.Sku@ext" alt="">
+                                                    <a href="@ViewData["url"]@prod.Sku@ext" class="portfolio-zoom-button popup-gallery"><i class="icofont-search" title="Увеличить"></i></a>
                                                 </div>
                                                 <div class="gallery-meta text-center">
                                                     <h5><a href="/product/show/@prod.Id" title="Подробнее">@prod.Title</a></h5>

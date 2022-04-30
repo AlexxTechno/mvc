@@ -31,6 +31,10 @@ namespace mvc.Controllers
                 Cat = _iAllCategory.IsPublishedCategory,
                 Prod = _iProduct.IsPublishedProduct
             };
+            string img = prodcat.Prod.FirstOrDefault().Image.Where(img => img.ImageTypeId == 3).FirstOrDefault().Guide;
+            int n = img.LastIndexOf("/")+1;
+            ViewData["url"] = img.Substring(0, n);
+
             return View(prodcat);
         }
 

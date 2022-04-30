@@ -1,18 +1,16 @@
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
-using mvc.Models;
+using Microsoft.AspNetCore.Mvc;
+using mvc.Data;
 using mvc.Interfaces;
-using mvc.Services;
+using mvc.Models;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using mvc.Data;
-using Microsoft.AspNetCore.Authorization;
-using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
 
 namespace mvc.Controllers
 {
@@ -21,12 +19,14 @@ namespace mvc.Controllers
     {
         private readonly IAllProduct _allProduct;
         private readonly IAllCategory _allCategory;
+        //private readonly IAllCategoryCatalog _allCategoryCatalog;
         private readonly ApplicationDbContext _applicationDb;
 
-        public DashController(ApplicationDbContext applicationDb, IAllProduct iAllProduct, IAllCategory iAllCategory)
+        public DashController(ApplicationDbContext applicationDb, IAllProduct iAllProduct, IAllCategory iAllCategory)       //, IAllCategoryCatalog iAllCategoryCatalog
         {
             _allProduct = iAllProduct;
             _allCategory = iAllCategory;
+            //_allCategoryCatalog = iAllCategoryCatalog;
             _applicationDb = applicationDb;
         }
 
@@ -505,6 +505,78 @@ namespace mvc.Controllers
         public IActionResult Privacy()
         {
             return View();
+        }
+
+        ///*******************************************************************
+        ///---------- Catalog test controller -----------
+        /// <summary>
+        /// Show All Products
+        /// </summary>
+        /// <returns></returns>
+        [Route("/dash/catalog")]
+        public IActionResult Catalog()
+        {
+            ProductCategory prodcat = new ProductCategory
+            {
+                Cat = _allCategory.AllCategory,
+                Prod = _allProduct.AllProduct
+            };
+            string img = prodcat.Prod.FirstOrDefault().Image.Where(img => img.ImageTypeId == 3).FirstOrDefault().Guide;
+            int n = img.LastIndexOf("/")+1;
+            ViewData["url"] = img.Substring(0, n);
+
+            return View(prodcat);
+
+
+            // IEnumerable<CategoryCatalog>   
+            //var catalog = _allCategoryCatalog.IsPublishedCategoryCatalog;
+            /*
+            IEnumerable<CategoryCatalog> catalog = (IEnumerable<CategoryCatalog>)_applicationDb.Category.Where(cat => cat.IsPublished == true)
+                                                                                       .Join(_applicationDb.Product.Where(prod => prod.IsPublished == true), // second set
+                                                                                       cat => cat.Id,                       // first set selector
+                                                                                       prod => prod.CategoryId,             // second set selector
+                                                                                       (cat, prod) => new
+                                                                                       {
+                                                                                           Id = cat.Id,
+                                                                                           Number = cat.Number,
+                                                                                           Title = cat.Title,
+                                                                                           Description = cat.Description,
+                                                                                           ProductId = prod.Id,
+                                                                                           IsPublished = prod.IsPublished,
+                                                                                           ProductNumber = prod.Number,
+                                                                                           ProductTitle = prod.Title,
+                                                                                           Sku = prod.Sku,
+                                                                                           IsNew = prod.IsNew,
+                                                                                           Price = prod.Price,
+                                                                                           PriceBig = prod.PriceBig,
+                                                                                           ProductDescription = prod.Description,
+                                                                                           Summary = prod.Summary,
+                                                                                           Materials = prod.Materials,
+                                                                                           ProductIsPublished = prod.IsPublished,
+                                                                                       }).OrderBy(item => item.Number)
+                                                                                       .ThenBy(item => item.ProductNumber)
+                                                                                        .Join(_applicationDb.Image
+                                                                                           .Where(img => img.ImageTypeId == 1),
+                                                                                           product => product.ProductId,
+                                                                                           img => img.ProductId,
+                                                                                           (prod, image) => new
+                                                                                           {
+                                                                                               ImageId = image.Id,
+                                                                                               ProductId = image.ProductId,
+                                                                                               ImageGuide = image.Guide,
+                                                                                               Quan = image.Quan
+                                                                                           });
+                                                                                        /*
+                                                                                        .Join(_applicationDb.Video,
+                                                                                           catalog => catalog.ProductId,
+                                                                                           video => video.ProductId,
+                                                                                           (prod, video) => new
+                                                                                           {
+                                                                                               VideoId = video.Id,
+                                                                                               ProductId = video.ProductId,
+                                                                                               VideoGuide = video.Guide
+                                                                                           });                                                                            
+            return View(catalog); */
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
